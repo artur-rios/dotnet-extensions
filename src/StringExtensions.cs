@@ -19,28 +19,33 @@ public static class StringExtensions
         /// </summary>
         /// <returns>True if the string has a lowercase character; otherwise false.</returns>
         public bool HasLowerChar() => RegexCollection.HasLowerChar().IsMatch(@string);
+
         /// <summary>
         /// Checks whether the string length is less than or equal to the given maximum.
         /// </summary>
         /// <param name="maxLength">Maximum allowed length.</param>
         /// <returns>True if within the max length; otherwise false.</returns>
         public bool HasMaxLength(int maxLength) => !(@string.Length > maxLength);
+
         /// <summary>
         /// Checks whether the string length is greater than or equal to the given minimum.
         /// </summary>
         /// <param name="minLength">Minimum required length.</param>
         /// <returns>True if meets the min length; otherwise false.</returns>
         public bool HasMinLength(int minLength) => !(@string.Length < minLength);
+
         /// <summary>
         /// Checks whether the string contains at least one numeric character.
         /// </summary>
         /// <returns>True if a number is present; otherwise false.</returns>
         public bool HasNumber() => RegexCollection.HasNumber().IsMatch(@string);
+
         /// <summary>
         /// Checks whether the string contains at least one uppercase character.
         /// </summary>
         /// <returns>True if the string has an uppercase character; otherwise false.</returns>
         public bool HasUpperChar() => RegexCollection.HasUpperChar().IsMatch(@string);
+
         /// <summary>
         /// Validates whether the string matches a basic email format.
         /// </summary>
@@ -66,7 +71,7 @@ public static class StringExtensions
         /// </summary>
         /// <param name="defaultValue">Value to return when parsing fails.</param>
         /// <returns>The parsed boolean or the default value.</returns>
-        public bool ParseToBoolOrDefault(bool defaultValue = false) =>
+        public bool? ParseToBoolOrDefault(bool? defaultValue = null) =>
             bool.TryParse(@string, out var result) ? result : defaultValue;
 
         /// <summary>
@@ -74,7 +79,7 @@ public static class StringExtensions
         /// </summary>
         /// <param name="defaultValue">Value to return when parsing fails.</param>
         /// <returns>The parsed integer or the default value.</returns>
-        public int ParseToIntOrDefault(int defaultValue = 0) =>
+        public int? ParseToIntOrDefault(int? defaultValue = null) =>
             int.TryParse(@string, out var result) ? result : defaultValue;
 
         /// <summary>
