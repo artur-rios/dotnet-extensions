@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeSymbols>false</IncludeSymbols>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>ArturRios.Extensions</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Artur Rios</Authors>
+    <Company>Artur Rios</Company>
+    <Description>A small, focused set of C# extension methods that make every day .NET work more pleasant.</Description>
+    <PackageTags>utilities</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/artur-rios/dotnet-extensions</RepositoryUrl>
+    <PackageProjectUrl>https://artur-rios.github.io/dotnet-extensions</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ArturRios.Util" Version="1.0.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+</Project>

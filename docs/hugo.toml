@@ -1,0 +1,27 @@
+baseURL = 'https://artur-rios.github.io/dotnet-extensions'
+languageCode = 'en-us'
+title = 'Dotnet Extensions'
+theme = 'hugo-theme-re-terminal'
+
+[module]
+  [[module.mounts]]
+    source = 'coverage-report'
+    target = 'static/coverage-report'
+
+[params.logo]
+  logoText = 'Dotnet Extensions'
+
+[menu]
+  [[menu.main]]
+    identifier = "author"
+    name = "Author"
+    url = "https://www.artur-rios.tech/"
+  [[menu.main]]
+    identifier = "github"
+    name = "GitHub"
+    url = "https://github.com/artur-rios/dotnet-extensions"
+  [[menu.main]]
+     identifier = "test-coverage"
+     name = "Test Coverage"
+     url = "https://artur-rios.github.io/dotnet-extensions/coverage-report"
+
