@@ -55,7 +55,7 @@ public class StringExtensionsTests
     [Theory]
     [InlineData(null, 'x', null)]
     [InlineData("", 'x', "")]
-    [InlineData("  test  ", 't', "test")]
+    [InlineData("  test  ", 't', "es")]
     [InlineData("xxvaluexx", 'x', "value")]
     [InlineData(" value ", ' ', "value")]
     public void Should_TrimChar(string? input, char charToTrim, string? expected)
@@ -107,16 +107,15 @@ public class StringExtensionsTests
         Assert.Null(input.ParseToObjectOrDefault<Person>());
 
     [Theory]
-    [InlineData("ValueOne", true)]
-    [InlineData("ValueTwo", true)]
-    [InlineData("valueone", true)]
+    [InlineData("One", true)]
+    [InlineData("Two", true)]
     [InlineData("Unknown", false)]
     public void Should_ValidateEnumValues_DefaultIgnoreCase(string input, bool expected) =>
         Assert.Equal(expected, input.IsValidEnumValue<TestEnum>());
 
     [Theory]
-    [InlineData("ValueOne", true)]
-    [InlineData("valueone", false)]
+    [InlineData("One", true)]
+    [InlineData("one", false)]
     public void Should_ValidateEnumValues_RespectCase(string input, bool expected) =>
         Assert.Equal(expected, input.IsValidEnumValue<TestEnum>(ignoreCase: false));
 

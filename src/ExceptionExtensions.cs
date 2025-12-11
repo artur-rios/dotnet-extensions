@@ -16,6 +16,6 @@ public static class ExceptionExtensions
         traceId = Guid.NewGuid();
 
         return
-            $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} | TraceId: {traceId} | Exception: {exception.GetType().Name} | Message: {exception.Message} | StackTrace: {exception.StackTrace}";
+            $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} | TraceId: {traceId} | Exception: {exception.GetType().Name} | Message: {exception.Message} | StackTrace: {exception.StackTrace ?? "No stack trace available"}";
     }
 }
