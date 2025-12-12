@@ -67,9 +67,6 @@ public class ExceptionsExtensionsTests
 
         return;
 
-        void Inner()
-        {
-            throw new ArgumentException("Bad arg");
-        }
+        void Inner() => throw new ArgumentException("Bad arg");
     }
 }

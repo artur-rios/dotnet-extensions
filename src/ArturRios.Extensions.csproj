@@ -20,10 +20,10 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ArturRios.Util" Version="1.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="ArturRios.Util" Version="1.0.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4"/>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\README.md" Pack="true" PackagePath="" />
+    <None Include="..\README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 </Project>

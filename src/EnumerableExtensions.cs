@@ -3,18 +3,18 @@
 namespace ArturRios.Extensions;
 
 /// <summary>
-/// Provides extension methods for IEnumerable instances, including emptiness checks and printing contents.
+///     Provides extension methods for IEnumerable instances, including emptiness checks and printing contents.
 /// </summary>
 public static class EnumerableExtensions
 {
     /// <summary>
-    /// Provides enumerable helpers for the given sequence.
+    ///     Provides enumerable helpers for the given sequence.
     /// </summary>
     /// <param name="enumerable">The sequence to print.</param>
     extension(IEnumerable? enumerable)
     {
         /// <summary>
-        /// Determines whether the enumerable is null or has no elements.
+        ///     Determines whether the enumerable is null or has no elements.
         /// </summary>
         /// <returns>True if empty or null; otherwise false.</returns>
         public bool IsEmpty()
@@ -44,13 +44,13 @@ public static class EnumerableExtensions
         }
 
         /// <summary>
-        /// Determines whether the enumerable contains at least one element.
+        ///     Determines whether the enumerable contains at least one element.
         /// </summary>
         /// <returns>True if not empty; otherwise false.</returns>
         public bool IsNotEmpty() => !IsEmpty(enumerable);
 
         /// <summary>
-        /// Prints each item in the enumerable. For complex objects, prints property name and value pairs.
+        ///     Prints each item in the enumerable. For complex objects, prints property name and value pairs.
         /// </summary>
         public void PrintContents()
         {

@@ -1,12 +1,12 @@
 ﻿namespace ArturRios.Extensions;
 
 /// <summary>
-/// Provides extension methods for Exceptions, including utilities to format an exception into a log line.
+///     Provides extension methods for Exceptions, including utilities to format an exception into a log line.
 /// </summary>
 public static class ExceptionExtensions
 {
     /// <summary>
-    /// Formats exception details into a single log line and outputs a generated trace identifier.
+    ///     Formats exception details into a single log line and outputs a generated trace identifier.
     /// </summary>
     /// <param name="exception">The exception to format.</param>
     /// <param name="traceId">The generated trace identifier associated with this log entry.</param>

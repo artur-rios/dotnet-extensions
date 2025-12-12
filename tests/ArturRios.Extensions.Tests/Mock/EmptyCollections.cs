@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace ArturRios.Extensions.Tests.Mock;
+﻿namespace ArturRios.Extensions.Tests.Mock;
 
 public class EmptyCollections : TheoryData<ITestEnumerable?>
 {

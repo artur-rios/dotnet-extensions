@@ -117,7 +117,7 @@ public class StringExtensionsTests
     [InlineData("One", true)]
     [InlineData("one", false)]
     public void Should_ValidateEnumValues_RespectCase(string input, bool expected) =>
-        Assert.Equal(expected, input.IsValidEnumValue<TestEnum>(ignoreCase: false));
+        Assert.Equal(expected, input.IsValidEnumValue<TestEnum>(false));
 
     [Theory]
     [InlineData(null, "fallback", "fallback")]

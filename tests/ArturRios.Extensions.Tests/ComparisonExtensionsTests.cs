@@ -16,7 +16,7 @@ public class ComparisonExtensionsTests
     public void Should_ReturnFalse_When_ElementIsNotInList()
     {
         const int three = 3;
-        
+
         Assert.False(three.In(EvenNumbers));
     }
 
@@ -24,7 +24,7 @@ public class ComparisonExtensionsTests
     public void Should_ReturnTrue_When_ElementIsNotInList()
     {
         const int three = 3;
-        
+
         Assert.True(three.NotIn(EvenNumbers));
     }
 
@@ -32,7 +32,7 @@ public class ComparisonExtensionsTests
     public void Should_ReturnFalse_When_ElementIsInList_NotIn()
     {
         const int two = 2;
-        
+
         Assert.False(two.NotIn(EvenNumbers));
     }
 }
