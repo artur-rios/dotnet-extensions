@@ -5,7 +5,7 @@ namespace ArturRios.Extensions.Tests;
 public class EnumExtensionsTests
 {
     [Fact]
-    public void Should_GetDescription()
+    public void GivenEnumValueWithDescription_WhenGettingDescription_ThenReturnsDescription()
     {
         var description = TestEnum.One.GetDescription();
 
@@ -13,7 +13,7 @@ public class EnumExtensionsTests
     }
 
     [Fact]
-    public void Should_ReturnNull_When_ValueHasNoDescription()
+    public void GivenEnumValueWithoutDescription_WhenGettingDescription_ThenReturnsNull()
     {
         var description = TestEnum.Three.GetDescription();
 
@@ -21,7 +21,7 @@ public class EnumExtensionsTests
     }
 
     [Fact]
-    public void Should_ReturnNull_When_ValueNotFound()
+    public void GivenInvalidEnumValue_WhenGettingDescription_ThenReturnsNull()
     {
         var description = ((TestEnum)100).GetDescription();
 

@@ -5,7 +5,7 @@ namespace ArturRios.Extensions.Tests;
 public class ExceptionsExtensionsTests
 {
     [Fact]
-    public void Should_ReturnLogLine_WithExpectedFormatAndTraceId()
+    public void GivenException_WhenCallingToLogLine_ThenReturnsLogLineWithExpectedFormatAndTraceId()
     {
         var ex = new InvalidOperationException("Invalid operation occurred");
 
@@ -22,7 +22,7 @@ public class ExceptionsExtensionsTests
     }
 
     [Fact]
-    public void Should_ContainExceptionTypeMessageAndStackTrace()
+    public void GivenNestedException_WhenCallingToLogLine_ThenContainsExceptionTypeMessageAndStackTrace()
     {
         Exception? ex = null;
 
@@ -47,7 +47,7 @@ public class ExceptionsExtensionsTests
     }
 
     [Fact]
-    public void Should_ThrowNullReference_When_ExceptionIsNull()
+    public void GivenNullException_WhenCallingToLogLine_ThenThrowsNullReferenceException()
     {
         Exception? ex = null;
 

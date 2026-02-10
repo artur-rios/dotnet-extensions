@@ -11,7 +11,7 @@ public class StringExtensionsTests
     [InlineData("123", false)]
     [InlineData("AbC", true)]
     [InlineData("", false)]
-    public void Should_CheckLowerChar(string input, bool expected) => Assert.Equal(expected, input.HasLowerChar());
+    public void GivenString_WhenCheckingLowerChar_ThenReturnsExpectedResult(string input, bool expected) => Assert.Equal(expected, input.HasLowerChar());
 
     [Theory]
     [InlineData("ABC", true)]
@@ -19,21 +19,21 @@ public class StringExtensionsTests
     [InlineData("123", false)]
     [InlineData("aBc", true)]
     [InlineData("", false)]
-    public void Should_CheckUpperChar(string input, bool expected) => Assert.Equal(expected, input.HasUpperChar());
+    public void GivenString_WhenCheckingUpperChar_ThenReturnsExpectedResult(string input, bool expected) => Assert.Equal(expected, input.HasUpperChar());
 
     [Theory]
     [InlineData("abc", false)]
     [InlineData("123", true)]
     [InlineData("a1b", true)]
     [InlineData("", false)]
-    public void Should_CheckNumber(string input, bool expected) => Assert.Equal(expected, input.HasNumber());
+    public void GivenString_WhenCheckingNumber_ThenReturnsExpectedResult(string input, bool expected) => Assert.Equal(expected, input.HasNumber());
 
     [Theory]
     [InlineData("abc", 3, true)]
     [InlineData("abcd", 3, false)]
     [InlineData("", 0, true)]
     [InlineData("a", 0, false)]
-    public void Should_CheckMaxLength(string input, int maxLength, bool expected) =>
+    public void GivenString_WhenCheckingMaxLength_ThenReturnsExpectedResult(string input, int maxLength, bool expected) =>
         Assert.Equal(expected, input.HasMaxLength(maxLength));
 
     [Theory]
@@ -41,7 +41,7 @@ public class StringExtensionsTests
     [InlineData("ab", 3, false)]
     [InlineData("", 0, true)]
     [InlineData("", 1, false)]
-    public void Should_CheckMinLength(string input, int minLength, bool expected) =>
+    public void GivenString_WhenCheckingMinLength_ThenReturnsExpectedResult(string input, int minLength, bool expected) =>
         Assert.Equal(expected, input.HasMinLength(minLength));
 
     [Theory]
@@ -50,7 +50,7 @@ public class StringExtensionsTests
     [InlineData("invalid", false)]
     [InlineData("user@", false)]
     [InlineData("@example.com", false)]
-    public void Should_ValidateEmail(string input, bool expected) => Assert.Equal(expected, input.IsValidEmail());
+    public void GivenString_WhenValidatingEmail_ThenReturnsExpectedResult(string input, bool expected) => Assert.Equal(expected, input.IsValidEmail());
 
     [Theory]
     [InlineData(null, 'x', null)]
@@ -58,7 +58,7 @@ public class StringExtensionsTests
     [InlineData("  test  ", 't', "es")]
     [InlineData("xxvaluexx", 'x', "value")]
     [InlineData(" value ", ' ', "value")]
-    public void Should_TrimChar(string? input, char charToTrim, string? expected)
+    public void GivenString_WhenTrimmingChar_ThenReturnsExpectedResult(string? input, char charToTrim, string? expected)
     {
         var actual = input?.TrimChar(charToTrim);
 
@@ -72,7 +72,7 @@ public class StringExtensionsTests
     [InlineData("notabool", false, false)]
     [InlineData(null, true, true)]
     [InlineData(null, false, false)]
-    public void Should_ParseToBoolOrDefault(string? input, bool defaultValue, bool expected) =>
+    public void GivenString_WhenParsingToBoolOrDefault_ThenReturnsExpectedResult(string? input, bool defaultValue, bool expected) =>
         Assert.Equal(expected, input.ParseToBoolOrDefault(defaultValue));
 
     [Theory]
@@ -80,11 +80,11 @@ public class StringExtensionsTests
     [InlineData("-1", 99, -1)]
     [InlineData("notanint", 99, 99)]
     [InlineData(null, 7, 7)]
-    public void Should_ParseToIntOrDefault(string? input, int defaultValue, int expected) =>
+    public void GivenString_WhenParsingToIntOrDefault_ThenReturnsExpectedResult(string? input, int defaultValue, int expected) =>
         Assert.Equal(expected, input.ParseToIntOrDefault(defaultValue));
 
     [Fact]
-    public void Should_ParseToObjectOrDefault_WithValidJson()
+    public void GivenValidJson_WhenParsingToObjectOrDefault_ThenReturnsObject()
     {
         var person = new Person { Name = "Alice", Age = 30, Home = new Address { Street = "Main", Number = 100 } };
         var json = JsonSerializer.Serialize(person);
@@ -103,31 +103,31 @@ public class StringExtensionsTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("{ invalid json }")]
-    public void Should_ReturnNull_OnInvalidOrEmptyJson(string? input) =>
+    public void GivenInvalidOrEmptyJson_WhenParsingToObjectOrDefault_ThenReturnsNull(string? input) =>
         Assert.Null(input.ParseToObjectOrDefault<Person>());
 
     [Theory]
     [InlineData("One", true)]
     [InlineData("Two", true)]
     [InlineData("Unknown", false)]
-    public void Should_ValidateEnumValues_DefaultIgnoreCase(string input, bool expected) =>
+    public void GivenString_WhenValidatingEnumValuesWithDefaultIgnoreCase_ThenReturnsExpectedResult(string input, bool expected) =>
         Assert.Equal(expected, input.IsValidEnumValue<TestEnum>());
 
     [Theory]
     [InlineData("One", true)]
     [InlineData("one", false)]
-    public void Should_ValidateEnumValues_RespectCase(string input, bool expected) =>
+    public void GivenString_WhenValidatingEnumValuesRespectingCase_ThenReturnsExpectedResult(string input, bool expected) =>
         Assert.Equal(expected, input.IsValidEnumValue<TestEnum>(false));
 
     [Theory]
     [InlineData(null, "fallback", "fallback")]
     [InlineData("", "fallback", "fallback")]
     [InlineData("value", "fallback", "value")]
-    public void Should_ReturnValueOrDefault(string? input, string? defaultValue, string? expected) =>
+    public void GivenString_WhenCallingValueOrDefault_ThenReturnsExpectedResult(string? input, string? defaultValue, string? expected) =>
         Assert.Equal(expected, input.ValueOrDefault(defaultValue));
 
     [Fact]
-    public void Should_JoinWith_DefaultSeparator_ForStrings()
+    public void GivenStringArray_WhenJoiningWithDefaultSeparator_ThenJoinsStrings()
     {
         var source = new[] { "a", "b", "c" };
         var result = source.JoinWith();
@@ -136,7 +136,7 @@ public class StringExtensionsTests
     }
 
     [Fact]
-    public void Should_JoinWith_CustomSeparator_ForStrings()
+    public void GivenStringArray_WhenJoiningWithCustomSeparator_ThenJoinsStrings()
     {
         var source = new[] { "a", "b", "c" };
         var result = source.JoinWith("|");
@@ -145,7 +145,7 @@ public class StringExtensionsTests
     }
 
     [Fact]
-    public void Should_JoinWith_DefaultSeparator_ForObjects()
+    public void GivenObjectArray_WhenJoiningWithDefaultSeparator_ThenJoinsObjects()
     {
         var source = new object?[] { 1, null, "x" };
         var result = source.JoinWith();
@@ -154,7 +154,7 @@ public class StringExtensionsTests
     }
 
     [Fact]
-    public void Should_JoinWith_CustomSeparator_ForObjects()
+    public void GivenObjectArray_WhenJoiningWithCustomSeparator_ThenJoinsObjects()
     {
         var source = new[] { new Person { Name = "A" }, new Person { Name = "B" } };
         var result = source.JoinWith(";");

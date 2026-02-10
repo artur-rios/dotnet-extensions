@@ -2,37 +2,37 @@
 
 public class ComparisonExtensionsTests
 {
-    private static readonly int[] EvenNumbers = [0, 2, 4, 6, 8, 10];
+    private static readonly int[] s_evenNumbers = [0, 2, 4, 6, 8, 10];
 
     [Fact]
-    public void Should_ReturnTrue_When_ElementIsInList()
+    public void GivenElementInList_WhenCallingIn_ThenReturnsTrue()
     {
         const int two = 2;
 
-        Assert.True(two.In(EvenNumbers));
+        Assert.True(two.In(s_evenNumbers));
     }
 
     [Fact]
-    public void Should_ReturnFalse_When_ElementIsNotInList()
+    public void GivenElementNotInList_WhenCallingIn_ThenReturnsFalse()
     {
         const int three = 3;
 
-        Assert.False(three.In(EvenNumbers));
+        Assert.False(three.In(s_evenNumbers));
     }
 
     [Fact]
-    public void Should_ReturnTrue_When_ElementIsNotInList()
+    public void GivenElementNotInList_WhenCallingNotIn_ThenReturnsTrue()
     {
         const int three = 3;
 
-        Assert.True(three.NotIn(EvenNumbers));
+        Assert.True(three.NotIn(s_evenNumbers));
     }
 
     [Fact]
-    public void Should_ReturnFalse_When_ElementIsInList_NotIn()
+    public void GivenElementInList_WhenCallingNotIn_ThenReturnsFalse()
     {
         const int two = 2;
 
-        Assert.False(two.NotIn(EvenNumbers));
+        Assert.False(two.NotIn(s_evenNumbers));
     }
 }

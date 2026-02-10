@@ -7,23 +7,23 @@ public class EnumerableExtensionsTests
 {
     [Theory]
     [ClassData(typeof(EmptyCollections))]
-    public void Should_ReturnTrue_ForEmptyCollections(IEnumerable collection) => Assert.True(collection.IsEmpty());
+    public void GivenEmptyCollections_WhenCallingIsEmpty_ThenReturnsTrue(IEnumerable collection) => Assert.True(collection.IsEmpty());
 
     [Theory]
     [ClassData(typeof(NotEmptyCollections))]
-    public void Should_ReturnFalse_FotNotEmptyCollections(IEnumerable collection) => Assert.False(collection.IsEmpty());
+    public void GivenNotEmptyCollections_WhenCallingIsEmpty_ThenReturnsFalse(IEnumerable collection) => Assert.False(collection.IsEmpty());
 
     [Theory]
     [ClassData(typeof(EmptyCollections))]
-    public void Should_ReturnFalse_ForEmptyCollections(IEnumerable collection) => Assert.False(collection.IsNotEmpty());
+    public void GivenEmptyCollections_WhenCallingIsNotEmpty_ThenReturnsFalse(IEnumerable collection) => Assert.False(collection.IsNotEmpty());
 
     [Theory]
     [ClassData(typeof(NotEmptyCollections))]
-    public void Should_ReturnTrue_ForNotEmptyCollections(IEnumerable collection) =>
+    public void GivenNotEmptyCollections_WhenCallingIsNotEmpty_ThenReturnsTrue(IEnumerable collection) =>
         Assert.True(collection.IsNotEmpty());
 
     [Fact]
-    public void Should_PrintMessage_ForNullEnumerable()
+    public void GivenNullEnumerable_WhenPrintingContents_ThenPrintsMessage()
     {
         IEnumerable? collection = null;
 
@@ -47,7 +47,7 @@ public class EnumerableExtensionsTests
     }
 
     [Fact]
-    public void Should_PrintPrimitiveItems_ForSimpleEnumerable()
+    public void GivenSimpleEnumerable_WhenPrintingContents_ThenPrintsPrimitiveItems()
     {
         IEnumerable collection = new[] { 1, 2, 3 };
 
@@ -73,7 +73,7 @@ public class EnumerableExtensionsTests
     }
 
     [Fact]
-    public void Should_PrintProperties_ForComplexObjects()
+    public void GivenComplexObjects_WhenPrintingContents_ThenPrintsProperties()
     {
         var people = new List<Person> { new() { Name = "John", Age = 30 }, new() { Name = "Jane", Age = 25 } };
 

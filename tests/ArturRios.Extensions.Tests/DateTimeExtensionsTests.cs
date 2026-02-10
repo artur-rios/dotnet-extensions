@@ -3,7 +3,7 @@
 public class DateTimeExtensionsTests
 {
     [Fact]
-    public void Should_RemoveMilliseconds()
+    public void GivenDateTimeWithMilliseconds_WhenRemovingMilliseconds_ThenMillisecondsAreZero()
     {
         var original = new DateTime(2025, 12, 10, 15, 30, 45, 123, DateTimeKind.Unspecified);
 
@@ -14,7 +14,7 @@ public class DateTimeExtensionsTests
     }
 
     [Fact]
-    public void Should_RemoveMilliseconds_And_PreservesDateTimeKind()
+    public void GivenUtcDateTimeWithMilliseconds_WhenRemovingMilliseconds_ThenPreservesDateTimeKind()
     {
         var original = new DateTime(2025, 12, 10, 15, 30, 45, 999, DateTimeKind.Utc);
 
@@ -25,7 +25,7 @@ public class DateTimeExtensionsTests
     }
 
     [Fact]
-    public void Should_RemoveMilliseconds_And_DoNotChangeOtherComponents()
+    public void GivenDateTimeWithMilliseconds_WhenRemovingMilliseconds_ThenDoesNotChangeOtherComponents()
     {
         var original = new DateTime(1999, 2, 28, 23, 59, 59, 1, DateTimeKind.Unspecified);
 

@@ -5,7 +5,7 @@ namespace ArturRios.Extensions.Tests;
 public class GenericExtensionsTests
 {
     [Fact]
-    public void Should_ReturnNull_WhenSourceIsNull()
+    public void GivenNullSource_WhenCloning_ThenReturnsNull()
     {
         Person? original = null;
 
@@ -15,7 +15,7 @@ public class GenericExtensionsTests
     }
 
     [Fact]
-    public void Should_CloneValueType()
+    public void GivenValueType_WhenCloning_ThenClonesValueType()
     {
         const int original = 42;
 
@@ -25,7 +25,7 @@ public class GenericExtensionsTests
     }
 
     [Fact]
-    public void Should_DeepCloneReferenceType_WithEqualValues_And_IndependentInstances()
+    public void GivenReferenceType_WhenCloning_ThenDeepClonesWithEqualValuesAndIndependentInstances()
     {
         var original = new Person { Name = "Alice", Age = 30, Home = new Address { Street = "Main", Number = 100 } };
 

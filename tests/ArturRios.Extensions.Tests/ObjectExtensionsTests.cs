@@ -5,7 +5,7 @@ namespace ArturRios.Extensions.Tests;
 public class ObjectExtensionsTests
 {
     [Fact]
-    public void Should_MapOnlyNonNullProperties_ToDictionary()
+    public void GivenObjectWithNullProperties_WhenCallingNonNullPropertiesToDictionary_ThenMapsOnlyNonNullProperties()
     {
         var obj = new { Name = "Bob", Age = 25, Home = (Address?)null };
 
@@ -21,7 +21,7 @@ public class ObjectExtensionsTests
     }
 
     [Fact]
-    public void Should_MapAllProperties_IncludingNulls_ToDictionary()
+    public void GivenObjectWithNullProperties_WhenCallingPropertiesToDictionary_ThenMapsAllPropertiesIncludingNulls()
     {
         var obj = new { Name = "Carol", Age = 40, Home = (Address?)null };
 
