@@ -2,7 +2,7 @@
 title = 'Dotnet Extensions'
 +++
 
-# Dotnet Extensions
+# Documentation
 
 A small, focused set of C# extension methods that make every day .NET work more pleasant. Covers strings, enums,
 collections, objects, dates, numbers, comparisons, and exceptions. Lightweight and fully unit-tested.
