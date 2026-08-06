@@ -1,27 +1,98 @@
-baseURL = 'https://artur-rios.github.io/dotnet-extensions'
-languageCode = 'en-us'
+baseURL = 'https://artur-rios.github.io/dotnet-extensions/'
 title = 'Dotnet Extensions'
-theme = 'hugo-theme-re-terminal'
+
+# Docsy is installed as the @docsy/theme NPM package (see package.json)
+theme = '@docsy/theme'
+themesDir = 'node_modules'
+
+enableRobotsTXT = true
+enableGitInfo = false
+
+defaultContentLanguage = 'en'
+defaultContentLanguageInSubdir = false
+locale = 'en-us'
+
+# Highlighting and Markdown
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.highlight]
+    style = 'tango'
+    guessSyntax = true
+    lineNos = false
+    noClasses = false
+
+[taxonomies]
+  tag = 'tags'
+  category = 'categories'
 
 [module]
   [[module.mounts]]
+    source = 'content/en'
+    target = 'content'
+  [[module.mounts]]
     source = 'coverage-report'
     target = 'static/coverage-report'
+  [[module.mounts]]
+    source = 'static'
+    target = 'static'
 
-[params.logo]
-  logoText = 'Dotnet Extensions'
+[languages]
+  [languages.en]
+    label = 'English'
+    weight = 1
+    title = 'Dotnet Extensions'
+    [languages.en.params]
+      description = "A small, focused set of C# extension methods that make every day .NET work more pleasant. Covers strings, enums, collections, objects, dates, numbers..."
 
-[menu]
-  [[menu.main]]
-    identifier = "author"
-    name = "Author"
-    url = "https://www.artur-rios.tech/"
-  [[menu.main]]
-    identifier = "github"
-    name = "GitHub"
-    url = "https://github.com/artur-rios/dotnet-extensions"
-  [[menu.main]]
-     identifier = "test-coverage"
-     name = "Test Coverage"
-     url = "https://artur-rios.github.io/dotnet-extensions/coverage-report"
+[params]
+  copyright.authors = 'Artur Rios | [MIT License](https://github.com/artur-rios/dotnet-extensions/blob/main/LICENSE)'
+  privacy_policy = ''
+  github_repo = 'https://github.com/artur-rios/dotnet-extensions'
+  github_branch = 'main'
+  github_subdir = 'docs'
+  offlineSearch = true
+  prism_syntax_highlighting = false
 
+  [params.ui]
+    breadcrumb_disable = false
+    navbar_logo = false
+    navbar_translucent_over_cover_disable = false
+    sidebar_menu_compact = false
+    sidebar_menu_foldable = true
+    sidebar_search_disable = false
+    showLightDarkModeMenu = true
+
+    [params.ui.feedback]
+      enable = false
+
+    [params.ui.readingtime]
+      enable = false
+
+  [params.links]
+    [[params.links.user]]
+      name = 'Author'
+      url = 'https://www.artur-rios.tech/'
+      icon = 'fa fa-user'
+      desc = "The author's website"
+    [[params.links.developer]]
+      name = 'GitHub'
+      url = 'https://github.com/artur-rios/dotnet-extensions'
+      icon = 'fab fa-github'
+      desc = 'Source code, issues and releases'
+
+[[menu.main]]
+  name = 'Documentation'
+  weight = 10
+  url = '/docs/'
+
+[[menu.main]]
+  name = 'Test Coverage'
+  weight = 20
+  url = '/coverage-report/'
+
+[[menu.main]]
+  name = 'GitHub'
+  weight = 30
+  url = 'https://github.com/artur-rios/dotnet-extensions'
+  pre = '<i class="fab fa-github"></i>'
