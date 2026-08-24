@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using ArturRios.Extensions.Tests.Mock;
 
 namespace ArturRios.Extensions.Tests;
 
+[Trait("Category", "Unit")]
 public class EnumerableExtensionsTests
 {
     [Theory]

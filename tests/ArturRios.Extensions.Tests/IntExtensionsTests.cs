@@ -1,5 +1,6 @@
-﻿namespace ArturRios.Extensions.Tests;
+namespace ArturRios.Extensions.Tests;
 
+[Trait("Category", "Unit")]
 public class IntExtensionsTests
 {
     [Theory]

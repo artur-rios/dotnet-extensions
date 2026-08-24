@@ -1,7 +1,8 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 namespace ArturRios.Extensions.Tests;
 
+[Trait("Category", "Unit")]
 public class ExceptionsExtensionsTests
 {
     [Fact]
