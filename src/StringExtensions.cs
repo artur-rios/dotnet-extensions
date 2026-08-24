@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using ArturRios.Util.RegularExpressions;
+using ArturRios.Util.Text;
 
 namespace ArturRios.Extensions;
 
@@ -10,14 +11,20 @@ namespace ArturRios.Extensions;
 public static class StringExtensions
 {
     /// <summary>
-    ///     Checks if the string corresponds to a valid value of the specified enum type.
+    ///     Checks if the string corresponds to a value declared by the specified enum type.
     /// </summary>
     /// <typeparam name="TEnum">The enum type to validate against.</typeparam>
     /// <param name="string">Input string value.</param>
     /// <param name="ignoreCase">Whether to ignore case during parsing (default true).</param>
-    /// <returns>True if the string can be parsed to the enum; otherwise false.</returns>
+    /// <returns>True if the string names a declared member of the enum; otherwise false.</returns>
+    /// <remarks>
+    ///     Leading and trailing whitespace is tolerated, as <see cref="Enum.TryParse(Type, string, bool, out object)"/>
+    ///     trims it. A numeric string is only accepted when the number it denotes is a declared member.
+    ///     <see cref="Enum.TryParse(Type, string, bool, out object)"/> on its own accepts any number in the
+    ///     underlying type's range, so "999" parsed as a three-member enum used to be reported as valid.
+    /// </remarks>
     public static bool IsValidEnumValue<TEnum>(this string @string, bool ignoreCase = true) where TEnum : Enum =>
-        Enum.TryParse(typeof(TEnum), @string, ignoreCase, out _);
+        Enum.TryParse(typeof(TEnum), @string, ignoreCase, out var parsed) && Enum.IsDefined(typeof(TEnum), parsed!);
 
     /// <summary>
     ///     Returns the string if it has value; otherwise returns the provided default.
@@ -85,16 +92,28 @@ public static class StringExtensions
         public bool HasUpperChar() => RegexCollection.HasUpperChar().IsMatch(@string);
 
         /// <summary>
-        ///     Validates whether the string matches a basic email format.
+        ///     Validates whether the string is a well-formed email address.
         /// </summary>
         /// <returns>True if the string is a valid email; otherwise false.</returns>
-        public bool IsValidEmail() => RegexCollection.Email().IsMatch(@string);
+        /// <remarks>
+        ///     Delegates to <see cref="EmailAddress.IsValid"/>, so a mixed-case or internationalized domain is
+        ///     normalized before the syntax check rather than rejected outright. Applying
+        ///     <see cref="RegexCollection.Email"/> directly, as this used to, made the same address valid here
+        ///     and invalid there depending on which of the two a caller happened to reach for.
+        /// </remarks>
+        public bool IsValidEmail() => EmailAddress.IsValid(@string);
 
         /// <summary>
-        ///     Trims leading/trailing whitespace and the specified character from the ends of the string.
+        ///     Trims leading and trailing whitespace, then trims the specified character from the ends of the
+        ///     result.
         /// </summary>
         /// <param name="charToTrim">Character to trim from both ends.</param>
         /// <returns>The trimmed string.</returns>
+        /// <remarks>
+        ///     The two passes run in that order and once each, so whitespace uncovered by removing
+        ///     <paramref name="charToTrim"/> is left in place: <c>"- a -"</c> trimmed of <c>'-'</c> yields
+        ///     <c>" a "</c>.
+        /// </remarks>
         public string TrimChar(char charToTrim) =>
             string.IsNullOrEmpty(@string) ? @string : @string.Trim().Trim(charToTrim);
     }

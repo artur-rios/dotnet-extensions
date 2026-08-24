@@ -1,8 +1,9 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using ArturRios.Extensions.Tests.Mock;
 
 namespace ArturRios.Extensions.Tests;
 
+[Trait("Category", "Unit")]
 public class StringExtensionsTests
 {
     [Theory]

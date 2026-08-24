@@ -1,5 +1,6 @@
-﻿namespace ArturRios.Extensions.Tests;
+namespace ArturRios.Extensions.Tests;
 
+[Trait("Category", "Unit")]
 public class ComparisonExtensionsTests
 {
     private static readonly int[] s_evenNumbers = [0, 2, 4, 6, 8, 10];

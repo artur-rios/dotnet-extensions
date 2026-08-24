@@ -1,4 +1,4 @@
-﻿# Dotnet Extensions
+# Dotnet Extensions
 
 [![Docs](https://img.shields.io/badge/docs-website-blue)](https://artur-rios.github.io/dotnet-extensions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
@@ -7,8 +7,7 @@
 A small, focused set of C# extension methods that make every day .NET work more pleasant. Covers strings, enums,
 collections, objects, dates, numbers, comparisons, and exceptions. Lightweight and fully unit-tested.
 
-## Install
-
+## Installation
 NuGet:
 
 ```powershell
@@ -57,7 +56,8 @@ var hasNumber = "a1b".HasNumber();       // true
 var okMin = "ab".HasMinLength(2);        // true
 var okMax = "abcd".HasMaxLength(3);      // false
 
-var isEmail = "user@example.com".IsValidEmail(); // true
+var isEmail = "user@example.com".IsValidEmail();   // true
+var idn     = "user@héllo.com".IsValidEmail();      // true - the domain is punycoded first
 
 var cleaned = "xxvaluexx".TrimChar('x'); // "value"
 
@@ -66,8 +66,8 @@ var value = ((string?)null).ValueOrDefault("fallback"); // "fallback"
 var numbers = new[] { 1, 2, 3 };
 var printed = numbers.JoinWith(" | "); // "1 | 2 | 3"
 
-var inSet = 2.In([0, 2, 4]);            // true
-var notIn = 3.NotIn([0, 2, 4]);         // true
+var inSet = 2.In(0, 2, 4);              // true
+var notIn = 3.NotIn(0, 2, 4);           // true
 
 var at = new DateTime(2025, 12, 10, 15, 30, 45, 999).RemoveMilliseconds();
 // 2025-12-10 15:30:45.000
@@ -85,11 +85,13 @@ unit tests under `tests/` for the full list and behavior.
 - `HasLowerChar()` / `HasUpperChar()` / `HasNumber()`
   - True/false checks for at least one lower/upper/digit character.
 - `HasMinLength(int min)` / `HasMaxLength(int max)`
-  - Length guardrails that treat `null` as failing and empty as length `0`.
+  - Length guardrails. Declared on a non-null `string`; an empty string has length `0`.
 - `IsValidEmail()`
-  - Practical email pattern validation.
+  - Delegates to `ArturRios.Util.Text.EmailAddress.IsValid`, so the domain is lowercased and punycoded
+    before the syntax check. Mixed-case and internationalized domains are accepted.
 - `TrimChar(char c)`
-  - Trims whitespace and the given character from both ends. Safe with `null`/empty input.
+  - Trims whitespace from both ends, then trims the given character from the result. The two passes run
+    once each in that order, so `"- a -".TrimChar('-')` is `" a "`. Empty input comes back unchanged.
 - `ValueOrDefault(string? defaultValue = null)`
   - Returns the string when it has a value; otherwise the provided default. Treats `null`/empty as no value.
 - `ParseToBoolOrDefault(bool default)` / `ParseToIntOrDefault(int default)`
@@ -97,7 +99,9 @@ unit tests under `tests/` for the full list and behavior.
 - `ParseToObjectOrDefault<T>()`
   - Parses JSON into `T`; returns `null` on invalid or empty input.
 - `IsValidEnumValue<TEnum>(bool ignoreCase = true)`
-  - Checks if a string matches an enum name. Case-insensitive by default.
+  - Checks if a string names a **declared** member of the enum. Case-insensitive by default, and
+    surrounding whitespace is tolerated. A numeric string is accepted only when the number it denotes is
+    a declared member, so `"999"` is rejected by a three-member enum.
 - `JoinWith(string separator = ", ")` (for `IEnumerable<string>` and `IEnumerable<object?>`)
   - Concatenates elements with a separator, converting objects via `ToString()` and allowing `null`.
 
@@ -121,12 +125,15 @@ unit tests under `tests/` for the full list and behavior.
 ### Generic extensions (`GenericExtensions`)
 
 - `Clone<T>()`
-  - Safe deep clone for reference types, and value copy for value types. Returns `null` when the source is `null`.
+  - Deep clone via a JSON round trip. Returns `null` when the source is `null`, and throws when the graph
+    cannot be round-tripped — a reference cycle, for example. The clone is only as faithful as the round
+    trip: members the serializer ignores are absent, and reference identity within the graph is not kept.
 
 ### DateTime extensions (`DateTimeExtensions`)
 
 - `RemoveMilliseconds()`
-  - Drops milliseconds while preserving the `DateTimeKind` and all other components.
+  - Truncates to whole seconds, preserving the `DateTimeKind`. Every sub-second component goes, not only
+    the milliseconds: microseconds and the remaining ticks go with them.
 
 ### Int extensions (`IntExtensions`)
 
@@ -136,8 +143,10 @@ unit tests under `tests/` for the full list and behavior.
 
 ### Comparison extensions (`ComparisonExtensions`)
 
-- `In<T>(IEnumerable<T> set)` / `NotIn<T>(IEnumerable<T> set)`
-  - Membership helpers for readability.
+- `In<T>(params T[] range)` / `NotIn<T>(params T[] range)`
+  - Membership helpers for readability. Equality is decided by `EqualityComparer<T>.Default`, so two
+    nulls compare equal and a type's own `Equals` / `IEquatable<T>` is honoured. An empty range never
+    matches; a `null` range throws `ArgumentNullException`.
 
 ### Exception extensions (`ExceptionExtensions`)
 
@@ -148,8 +157,10 @@ unit tests under `tests/` for the full list and behavior.
 ## Usage notes
 
 - All methods are `static` extensions under the `ArturRios.Extensions` namespace.
-- The library prioritizes clarity and safety: methods are null-aware where it makes sense and avoid throwing on common
-  invalid input.
+- The library prioritizes clarity and safety: methods are null-aware where the receiver is declared
+  nullable, and avoid throwing on common invalid input. Where a receiver is declared non-null — the
+  `string` validation helpers, for instance — calling it on `null` is a compiler warning and a runtime
+  failure, not a silent `false`.
 - Uses BCL APIs like `System.Text.Json` and reflection where applicable, plus a couple of small NuGet dependencies
   (see [Dependencies](#dependencies)).
 
@@ -157,6 +168,25 @@ unit tests under `tests/` for the full list and behavior.
 
 - Issues and PRs are welcome. If you plan a larger change, open an issue first with a short proposal.
 - Coding style: follow existing conventions; keep APIs small and focused.
+
+## Testing
+
+The test suite is xUnit, and every test is named with the Given / When / Then pattern. Every test class
+carries a `Category` trait, so the two kinds can be run — and reported — separately:
+
+```bash
+dotnet test src/ArturRios.Extensions.sln --filter "Category=Unit"
+dotnet test src/ArturRios.Extensions.sln --filter "Category=Functional"
+```
+
+Unit tests exercise the code in isolation against test doubles.
+Functional tests run the extensions together over real JSON files on disk and real console output.
+CI runs the two as separate jobs, and both must pass before a pull request can be merged.
+
+## Versioning
+
+Semantic Versioning (SemVer). Breaking changes result in a new major version. New methods or non-breaking behavior
+changes increment the minor version; fixes or tweaks increment the patch.
 
 ## Build, test and publish
 
@@ -166,11 +196,6 @@ If you want, optional helper toolsets I built to facilitate these tasks are avai
 
 - [Dotnet Tools](https://github.com/artur-rios/dotnet-tools)
 - [Python Dotnet Tools](https://github.com/artur-rios/python-dotnet-tools)
-
-## Versioning
-
-Semantic Versioning (SemVer). Breaking changes result in a new major version. New methods or non-breaking behavior
-changes increment the minor version; fixes or tweaks increment the patch.
 
 ## Legal Details
 

@@ -1,7 +1,8 @@
-﻿using ArturRios.Extensions.Tests.Mock;
+using ArturRios.Extensions.Tests.Mock;
 
 namespace ArturRios.Extensions.Tests;
 
+[Trait("Category", "Unit")]
 public class ObjectExtensionsTests
 {
     [Fact]
