@@ -17,10 +17,10 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>utilities</PackageTags>
     <RepositoryUrl>https://github.com/artur-rios/dotnet-extensions</RepositoryUrl>
-    <Version>1.3.0</Version>
+    <Version>1.4.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ArturRios.Util" Version="2.0.0" />
+    <PackageReference Include="ArturRios.Util" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
   <ItemGroup>
