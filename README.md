@@ -183,6 +183,27 @@ Unit tests exercise the code in isolation against test doubles.
 Functional tests run the extensions together over real JSON files on disk and real console output.
 CI runs the two as separate jobs, and both must pass before a pull request can be merged.
 
+## Branching and releases
+
+`develop` is the integration branch and the base for all new work; `main` only holds released code.
+
+1. Branch off `develop` — `feature/<name>` for features, `fix/<name>` for fixes (`chore/`, `refactor/`, `docs/`,
+   `ci/`, `test/`, `perf/` and `build/` are accepted too) — and open a pull request back into `develop`.
+2. To release, cut `release/<version>` from `develop`, set `<Version>` in `src/ArturRios.Extensions.csproj` to that version
+   and open a pull request into `main`. Only `release/*` branches can be merged into `main`.
+3. Once it is merged, tag the merge commit on `main` with the version. Pushing the tag publishes the package to
+   nuget.org and GitHub Packages:
+
+   ```bash
+   git switch main && git pull
+   git tag <version> && git push origin <version>
+   ```
+
+4. Open a pull request from `main` into `develop` to bring the release back into the integration branch.
+
+Pull requests into `develop` and `main` must pass the tests and the branch policy check. Only the repository owner can
+push version tags, and the publish workflow rejects tags that do not point at a commit on `main`.
+
 ## Versioning
 
 Semantic Versioning (SemVer). Breaking changes result in a new major version. New methods or non-breaking behavior
