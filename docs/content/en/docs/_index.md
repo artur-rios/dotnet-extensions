@@ -24,7 +24,7 @@ Git submodule:
 
 ```powershell
 # add under ./lib/ArturRios.Extensions
-git submodule add https://github.com/ArturRios/dotnet-extensions lib/ArturRios.Extensions
+git submodule add https://github.com/artur-rios/dotnet-extensions lib/ArturRios.Extensions
 ```
 
 Then reference the project from your solution:
@@ -96,16 +96,18 @@ unit tests under `tests/` for the full list and behavior.
     once each in that order, so `"- a -".TrimChar('-')` is `" a "`. Empty input comes back unchanged.
 - `ValueOrDefault(string? defaultValue = null)`
   - Returns the string when it has a value; otherwise the provided default. Treats `null`/empty as no value.
-- `ParseToBoolOrDefault(bool default)` / `ParseToIntOrDefault(int default)`
-  - Safe parsing that returns the provided default on invalid or `null` input.
+- `ParseToBoolOrDefault(bool? defaultValue = null)` / `ParseToIntOrDefault(int? defaultValue = null)`
+  - Safe parsing to `bool?` / `int?` that returns the provided default — `null` unless you pass one — on invalid or
+    `null` input. Integers are parsed with the invariant culture, so `"-5"` is `-5` whatever the machine's culture.
 - `ParseToObjectOrDefault<T>()`
-  - Parses JSON into `T`; returns `null` on invalid or empty input.
+  - Parses JSON into `T`; returns `null` on invalid or empty input. Property names match regardless of case, so
+    `{"name":"Ana"}` binds to a `Name` property.
 - `IsValidEnumValue<TEnum>(bool ignoreCase = true)`
   - Checks if a string names a **declared** member of the enum. Case-insensitive by default, and
     surrounding whitespace is tolerated. A numeric string is accepted only when the number it denotes is
     a declared member, so `"999"` is rejected by a three-member enum.
-- `JoinWith(string separator = ", ")` (for `IEnumerable<string>` and `IEnumerable<object?>`)
-  - Concatenates elements with a separator, converting objects via `ToString()` and allowing `null`.
+- `JoinWith(string separator = ", ")` (for `IEnumerable<string>` and any `IEnumerable<T>`)
+  - Concatenates elements with a separator, converting other element types via `ToString()` and allowing `null`.
 
 ### Enumerable extensions (`EnumerableExtensions`)
 
@@ -113,6 +115,8 @@ unit tests under `tests/` for the full list and behavior.
   - Works for any `IEnumerable`. Avoids materializing where possible.
 - `PrintContents()`
   - Writes primitive items directly and complex object properties to `Console.Out`. Handles `null` enumerable.
+    Enums, `Guid`, `DateTime`, `DateTimeOffset`, `DateOnly`, `TimeOnly` and `TimeSpan` items print as one value;
+    static properties and indexers are skipped.
 
 ### Enum extensions (`EnumExtensions`)
 
@@ -122,7 +126,9 @@ unit tests under `tests/` for the full list and behavior.
 ### Object extensions (`ObjectExtensions`)
 
 - `NonNullPropertiesToDictionary()` / `PropertiesToDictionary()`
-  - Reflects an object into a dictionary of property names to values, optionally skipping `null` values.
+  - Reflects an object into a dictionary of property names to values, optionally skipping `null` values. Only
+    public, readable instance properties are included: static properties, indexers and write-only properties are
+    skipped.
 
 ### Generic extensions (`GenericExtensions`)
 
@@ -153,7 +159,8 @@ unit tests under `tests/` for the full list and behavior.
 ### Exception extensions (`ExceptionExtensions`)
 
 - `ToLogLine(out Guid traceId)`
-  - Produces a single-line log string with timestamp, trace id, exception type, message, and stack trace. Throws
+  - Produces a single-line log string with timestamp, trace id, exception type, message, and stack trace. Line
+    breaks in the message and stack trace are escaped as `\n`, so one exception is always one line. Throws
       `NullReferenceException` when called on `null`.
 
 ## Usage notes
@@ -165,39 +172,6 @@ unit tests under `tests/` for the full list and behavior.
   failure, not a silent `false`.
 - Uses BCL APIs like `System.Text.Json` and reflection where applicable, plus a couple of small NuGet dependencies
   (see [Dependencies](#dependencies)).
-
-## Contributing
-
-- Issues and PRs are welcome. If you plan a larger change, open an issue first with a short proposal.
-- Coding style: follow existing conventions; keep APIs small and focused.
-
-## Testing
-
-The test suite is xUnit, and every test is named with the Given / When / Then pattern. Every test class
-carries a `Category` trait, so the two kinds can be run — and reported — separately:
-
-```bash
-dotnet test src/ArturRios.Extensions.sln --filter "Category=Unit"
-dotnet test src/ArturRios.Extensions.sln --filter "Category=Functional"
-```
-
-Unit tests exercise the code in isolation against test doubles.
-Functional tests run the extensions together over real JSON files on disk and real console output.
-CI runs the two as separate jobs, and both must pass before a pull request can be merged.
-
-## Versioning
-
-Semantic Versioning (SemVer). Breaking changes result in a new major version. New methods or non-breaking behavior
-changes increment the minor version; fixes or tweaks increment the patch.
-
-## Build, test and publish
-
-Use the official [.NET CLI](https://learn.microsoft.com/en-us/dotnet/core/tools/) to build, test and publish the project
-and Git for source control.
-If you want, optional helper toolsets I built to facilitate these tasks are available:
-
-- [Dotnet Tools](https://github.com/artur-rios/dotnet-tools)
-- [Python Dotnet Tools](https://github.com/artur-rios/python-dotnet-tools)
 
 ## Legal Details
 
