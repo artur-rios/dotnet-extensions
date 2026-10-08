@@ -8,6 +8,8 @@ on:
       - 'docs/**'
       - 'src/**'
       - 'tests/**'
+      - 'CHANGELOG.md'
+      - 'CONTRIBUTING.md'
       - '.github/workflows/build-docs-and-coverage-report.yml'
   workflow_dispatch:
     inputs:
