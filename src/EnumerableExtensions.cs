@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection;
 
 namespace ArturRios.Extensions;
 
@@ -52,6 +53,13 @@ public static class EnumerableExtensions
         /// <summary>
         ///     Prints each item in the enumerable. For complex objects, prints property name and value pairs.
         /// </summary>
+        /// <remarks>
+        ///     Primitives, strings, decimals, enums and the common value types that represent a single value —
+        ///     <see cref="DateTime"/>, <see cref="DateTimeOffset"/>, <see cref="DateOnly"/>, <see cref="TimeOnly"/>,
+        ///     <see cref="TimeSpan"/> and <see cref="Guid"/> — are printed as one line, as is any item that has
+        ///     no readable instance property. Anything else is printed one public, readable instance property
+        ///     per line; static properties and indexers are skipped.
+        /// </remarks>
         public void PrintContents()
         {
             if (enumerable is null)
@@ -70,15 +78,16 @@ public static class EnumerableExtensions
                     continue;
                 }
 
-                var type = item.GetType();
+                PropertyInfo[] properties = IsSingleValue(item)
+                    ? []
+                    : ObjectExtensions.ReadableInstanceProperties(item.GetType()).ToArray();
 
-                if (type.IsPrimitive || item is string || item is decimal)
+                if (properties.Length == 0)
                 {
                     Console.WriteLine(item);
                 }
                 else
                 {
-                    var properties = type.GetProperties();
                     foreach (var prop in properties)
                     {
                         var value = prop.GetValue(item, null);
@@ -88,4 +97,12 @@ public static class EnumerableExtensions
             }
         }
     }
+
+    /// <summary>
+    ///     Whether <paramref name="item"/> represents a single value that reads best through its own
+    ///     <see cref="object.ToString"/> rather than as a list of properties.
+    /// </summary>
+    private static bool IsSingleValue(object item) =>
+        item.GetType().IsPrimitive || item.GetType().IsEnum ||
+        item is string or decimal or DateTime or DateTimeOffset or DateOnly or TimeOnly or TimeSpan or Guid;
 }

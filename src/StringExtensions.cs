@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using ArturRios.Util.RegularExpressions;
 using ArturRios.Util.Text;
 
@@ -10,6 +11,12 @@ namespace ArturRios.Extensions;
 /// </summary>
 public static class StringExtensions
 {
+    /// <summary>
+    ///     Options used by <see cref="ParseToObjectOrDefault{T}(string?)"/>: property names match regardless
+    ///     of case.
+    /// </summary>
+    private static readonly JsonSerializerOptions CaseInsensitiveJson = new() { PropertyNameCaseInsensitive = true };
+
     /// <summary>
     ///     Checks if the string corresponds to a value declared by the specified enum type.
     /// </summary>
@@ -136,14 +143,28 @@ public static class StringExtensions
         /// </summary>
         /// <param name="defaultValue">Value to return when parsing fails.</param>
         /// <returns>The parsed integer or the default value.</returns>
+        /// <remarks>
+        ///     Parsing uses the invariant culture, so the result does not depend on the machine it runs on.
+        ///     Under the current culture, <c>"-5"</c> came back as the default on a machine set to a culture
+        ///     whose negative sign is not the ASCII hyphen-minus, such as fa-IR or ar-SA. Surrounding
+        ///     whitespace and a leading sign are accepted; group separators are not.
+        /// </remarks>
         public int? ParseToIntOrDefault(int? defaultValue = null) =>
-            int.TryParse(@string, out var result) ? result : defaultValue;
+            int.TryParse(@string, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+                ? result
+                : defaultValue;
 
         /// <summary>
         ///     Attempts to deserialize the JSON string to an object of type <typeparamref name="T" />.
         /// </summary>
         /// <typeparam name="T">Target reference type.</typeparam>
         /// <returns>An instance of T if deserialization succeeds; otherwise null.</returns>
+        /// <remarks>
+        ///     Property names are matched without regard to case, so <c>{"name":"Ana"}</c> binds to a
+        ///     <c>Name</c> property. Matching only the exact case left every member at its default without
+        ///     any error, unlike <see cref="GenericExtensions.Clone{T}"/>, the HTTP helpers of ArturRios.Util
+        ///     and Microsoft.Extensions.Configuration binding, which all ignore case.
+        /// </remarks>
         public T? ParseToObjectOrDefault<T>() where T : class
         {
             if (string.IsNullOrEmpty(@string))
@@ -153,7 +174,7 @@ public static class StringExtensions
 
             try
             {
-                return JsonSerializer.Deserialize<T>(@string);
+                return JsonSerializer.Deserialize<T>(@string, CaseInsensitiveJson);
             }
             catch
             {
