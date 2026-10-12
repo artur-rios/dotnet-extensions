@@ -58,7 +58,7 @@ locale = 'en-us'
       description = "A small, focused set of C# extension methods that make every day .NET work more pleasant. Covers strings, enums, collections, objects, dates, numbers..."
 
 [params]
-  copyright.authors = 'Artur Rios | [MIT License](https://github.com/artur-rios/dotnet-extensions/blob/main/LICENSE)'
+  copyright.authors = 'Artur Rios | [Artur Rios Attribution License](https://github.com/artur-rios/dotnet-extensions/blob/main/LICENSE)'
   privacy_policy = ''
   github_repo = 'https://github.com/artur-rios/dotnet-extensions'
   github_branch = 'main'
