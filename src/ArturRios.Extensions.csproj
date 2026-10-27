@@ -13,7 +13,7 @@
     <Nullable>enable</Nullable>
     <PackageId>ArturRios.Extensions</PackageId>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://artur-rios.github.io/dotnet-extensions</PackageProjectUrl>
+    <PackageProjectUrl>https://docs.artur-rios.tech/dotnet-extensions</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>utilities</PackageTags>
     <RepositoryUrl>https://github.com/artur-rios/dotnet-extensions</RepositoryUrl>

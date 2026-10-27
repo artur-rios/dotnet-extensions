@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   as an object with every member at its default.
 - `In` and `NotIn` are declared as classic extension methods. The compiled method signatures are unchanged, so the
   change is binary compatible.
+- The package's project URL is the documentation site's new address, `https://docs.artur-rios.tech/dotnet-extensions`, since the
+  site moved from GitHub Pages.
 
 ### Fixed
 
