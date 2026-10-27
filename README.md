@@ -1,5 +1,11 @@
 # Dotnet Extensions
 
+> [!NOTE]
+> This is the real, open-source code of dotnet-extensions. Its home is Forgejo, at
+> https://git.techcraftsmen.net/artur-rios/dotnet-extensions; the copy on GitHub is a read-only mirror, for viewing only, and
+> its issues and pull requests are not followed. If you want to contribute, email me at
+> arturdev@duck.com.
+
 [![Docs](https://img.shields.io/badge/docs-website-blue)](https://artur-rios.github.io/dotnet-extensions)
 [![License: Attribution](https://img.shields.io/badge/License-Attribution-blue.svg)](https://github.com/artur-rios/dotnet-extensions/blob/main/LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/ArturRios.Extensions.svg)](https://www.nuget.org/packages/ArturRios.Extensions)
