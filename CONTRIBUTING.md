@@ -1,0 +1,106 @@
+# Contributing
+
+This repository lives at <https://git.techcraftsmen.net/artur-rios/dotnet-extensions>; the GitHub repository is a read-only mirror of it, so
+clone from there and open pull requests there:
+
+```bash
+git clone https://git.techcraftsmen.net/artur-rios/dotnet-extensions.git
+```
+
+- Issues and PRs are welcome. If you plan a larger change, open an issue first with a short proposal.
+- Coding style: follow existing conventions; keep APIs small and focused.
+
+## Prerequisites
+
+- [.NET SDK 10.0](https://dotnet.microsoft.com/download) or later
+- Git
+
+Use the official [.NET CLI](https://learn.microsoft.com/en-us/dotnet/core/tools/) to build, test and publish the project.
+If you want, optional helper toolsets I built to facilitate these tasks are available:
+
+- [Dotnet Tools](https://github.com/artur-rios/dotnet-tools)
+- [Python Dotnet Tools](https://github.com/artur-rios/python-dotnet-tools)
+
+## Build
+
+```bash
+dotnet build src/ArturRios.Extensions.sln
+```
+
+## Testing
+
+The test suite is xUnit, and every test is named with the Given / When / Then pattern. Every test class
+carries a `Category` trait, so the two kinds can be run — and reported — separately:
+
+```bash
+dotnet test src/ArturRios.Extensions.sln --filter "Category=Unit"
+dotnet test src/ArturRios.Extensions.sln --filter "Category=Functional"
+```
+
+Unit tests exercise the code in isolation against test doubles.
+Functional tests run the extensions together over real JSON files on disk and real console output.
+The `test` check runs the two one after the other, and both must pass before a pull request can be merged. It is `ci/test.sh`,
+which you can run on your machine as well.
+
+The check also fails when a test has no `Category` trait, since no run would include it, and when
+`dotnet format --verify-no-changes` finds a file to reformat; run `dotnet format src/ArturRios.Extensions.sln` before pushing.
+
+The `coverage` check (`ci/coverage.sh`) runs the tests with coverage collected and makes the HTML report that the docs site
+serves at `/coverage-report/`.
+
+## Branching and pull requests
+
+`develop` is the integration branch and the base for all new work; `main` only holds released code.
+
+Branch off `develop` — `feature/<name>` for features, `fix/<name>` for fixes (lowercase letters, digits, `.`, `_` and `-` in the
+name) — and open a pull request back into `develop`. Renovate's `renovate/*` dependency-update branches are accepted into
+`develop` too, and `main` only receives `release/<version>` pull requests.
+
+Pull requests into `develop` and `main` must pass the `test` and `coverage` checks and the branch policy check, which Jenkins runs
+(`yggdrasil.yml` and `ci/` describe them).
+
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) with a lowercase subject, e.g.
+`refactor: use prime logic from util package` or `chore: organize csproj properties`.
+
+Record every change a package consumer would notice under `## [Unreleased]` in [CHANGELOG.md](./CHANGELOG.md), in the
+same pull request that makes it.
+
+## Versioning
+
+The project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html). As a library, its contract is the
+public API and the documented behavior of the `ArturRios.Extensions` package:
+
+- **Major**: a change that can break a consumer — a public type or member removed, renamed or given a different
+  signature, or documented behavior changed in a way callers may rely on. Its CHANGELOG entry carries an
+  `### Upgrading from <X>.x to <Y>.0` subsection telling consumers what to change.
+- **Minor**: new public API, or a behavior change existing callers do not have to adapt to, dependency updates
+  included.
+- **Patch**: a fix or tweak that leaves the public API and the documented behavior as they are.
+
+The version lives in one place, `<Version>` in `src/ArturRios.Extensions.csproj`, which `dotnet pack` uses as the package
+version. It is set by hand on `develop` just before a release (see [Releasing](#releasing)), and CI holds it to the release: the branch
+policy check (`ci/branch-policy.sh`) requires it to match the `release/<version>` branch name, and packing (`ci/pack.sh`)
+requires it to match the tag.
+
+## Releasing
+
+1. A release branch is a snapshot of `develop` and carries no commits of its own, so prepare the release on `develop` first, in a
+   `feature/` or `fix/` branch merged like any other: set `<Version>` in `src/ArturRios.Extensions.csproj` to the new version, rename
+   `## [Unreleased]` in [CHANGELOG.md](./CHANGELOG.md) to `## [<version>] - <yyyy-mm-dd>` above a fresh, empty
+   `## [Unreleased]`, and update the compare links at the bottom.
+2. Cut `release/<version>` from the updated `develop`, push it and open a pull request into `main`. Only `release/*`
+   branches can be merged into `main`, and the branch policy check rejects a branch that carries a commit `develop` does not have or whose `<Version>` in the csproj is
+   not the branch's version.
+3. Once its checks have passed, the owner merges it with a merge commit. Then tag the merge commit on `main` with the version,
+   annotated. Pushing the tag publishes the package to nuget.org:
+
+   ```bash
+   git switch main && git pull
+   git tag -a <version> -m <version> && git push origin <version>
+   ```
+
+   Tag with the bare version, e.g. `1.3.0`. Some older releases were tagged with a `v` prefix
+   (`v1.1.0`); those tags stay as they are, but new tags drop the prefix.
+
+Only the repository owner can push version tags. Jenkins builds the tag, which must point at a commit on `main`, packs the library
+with `ci/pack.sh` (it fails when the tag's version differs from `<Version>` in the csproj) and pushes the package to nuget.org.

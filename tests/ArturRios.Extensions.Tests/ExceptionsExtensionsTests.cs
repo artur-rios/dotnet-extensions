@@ -70,4 +70,41 @@ public class ExceptionsExtensionsTests
 
         void Inner() => throw new ArgumentException("Bad arg");
     }
+
+    [Fact]
+    public void GivenExceptionWithAMultiFrameStackTrace_WhenCallingToLogLine_ThenTheResultIsASingleLine()
+    {
+        Exception? ex = null;
+
+        try
+        {
+            ThrowNested();
+        }
+        catch (Exception caught)
+        {
+            ex = caught;
+        }
+
+        Assert.NotNull(ex);
+        Assert.Contains('\n', ex.StackTrace!);
+
+        var logLine = ex.ToLogLine(out _);
+
+        Assert.DoesNotContain('\n', logLine);
+        Assert.DoesNotContain('\r', logLine);
+        Assert.Contains("ExceptionsExtensionsTests.ThrowNested", logLine);
+    }
+
+    [Theory]
+    [InlineData("first\nsecond")]
+    [InlineData("first\r\nsecond")]
+    [InlineData("first\rsecond")]
+    [InlineData("first\u2028second")]
+    public void GivenAMessageWithALineBreak_WhenCallingToLogLine_ThenTheBreakIsEscapedRatherThanStartingANewEntry(string message)
+    {
+        var logLine = new InvalidOperationException(message).ToLogLine(out _);
+
+        Assert.Contains("Message: first\\nsecond | StackTrace:", logLine);
+        Assert.Single(logLine.Split(['\n', '\r', '\u2028', '\u2029']));
+    }
 }

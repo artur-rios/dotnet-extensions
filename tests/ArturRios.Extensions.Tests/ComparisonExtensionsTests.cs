@@ -36,4 +36,13 @@ public class ComparisonExtensionsTests
 
         Assert.False(two.NotIn(s_evenNumbers));
     }
+
+    [Fact]
+    public void GivenAnExpandedParamsCall_WhenCallingInAndNotIn_ThenBothAnswerCorrectly()
+    {
+        // Compiled with nullable warnings as errors, so this call also pins that an expanded params call
+        // raises no CS8620 warning, which the extension-block form produced for every argument.
+        Assert.True("b".In("a", "b"));
+        Assert.True(4.NotIn(1, 2, 3));
+    }
 }

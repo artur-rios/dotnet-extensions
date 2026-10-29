@@ -4,6 +4,7 @@ using ArturRios.Extensions.Tests.Mock;
 namespace ArturRios.Extensions.Tests;
 
 [Trait("Category", "Unit")]
+[Collection(ConsoleCollection.Name)]
 public class EnumerableExtensionsTests
 {
     [Theory]
@@ -98,5 +99,56 @@ public class EnumerableExtensionsTests
         Assert.Contains("Age: 30", output);
         Assert.Contains("Name: Jane", output);
         Assert.Contains("Age: 25", output);
+    }
+
+    [Fact]
+    public void GivenSingleValueItems_WhenPrintingContents_ThenEachItemIsPrintedAsItself()
+    {
+        var id = Guid.Parse("0f8fad5b-d9cb-469f-a165-70867728950e");
+        var at = new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+        IEnumerable collection = new object[] { id, DayOfWeek.Friday, at, TimeSpan.FromMinutes(90) };
+
+        var lines = CaptureConsole(collection.PrintContents)
+            .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+
+        Assert.Equal([id.ToString(), "Friday", at.ToString(), TimeSpan.FromMinutes(90).ToString()], lines);
+    }
+
+    [Fact]
+    public void GivenItemsWithStaticPropertiesOrIndexers_WhenPrintingContents_ThenOnlyInstancePropertiesArePrinted()
+    {
+        IEnumerable collection = new[] { new Indexed() };
+
+        var output = CaptureConsole(collection.PrintContents);
+
+        Assert.Equal($"Name: indexed{Environment.NewLine}", output);
+    }
+
+    private static string CaptureConsole(Action action)
+    {
+        using var sw = new StringWriter();
+        var originalOut = Console.Out;
+
+        Console.SetOut(sw);
+
+        try
+        {
+            action();
+        }
+        finally
+        {
+            Console.SetOut(originalOut);
+        }
+
+        return sw.ToString();
+    }
+
+    private sealed class Indexed
+    {
+        public static int Created { get; set; } = 1;
+
+        public string Name { get; set; } = "indexed";
+
+        public int this[int index] => index;
     }
 }

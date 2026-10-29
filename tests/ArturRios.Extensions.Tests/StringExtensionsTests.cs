@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using ArturRios.Extensions.Tests.Mock;
 
@@ -161,5 +162,44 @@ public class StringExtensionsTests
         var result = source.JoinWith(";");
 
         Assert.Equal(string.Join(";", source.Select(p => p.ToString())), result);
+    }
+
+    [Theory]
+    [InlineData("fa-IR")]
+    [InlineData("ar-SA")]
+    [InlineData("en-US")]
+    public void GivenANegativeNumberAndAnyCurrentCulture_WhenParsingToIntOrDefault_ThenTheInvariantFormIsParsed(string culture)
+    {
+        var original = CultureInfo.CurrentCulture;
+
+        try
+        {
+            CultureInfo.CurrentCulture = new CultureInfo(culture);
+
+            Assert.Equal(-5, "-5".ParseToIntOrDefault());
+            Assert.Equal(1234, " 1234 ".ParseToIntOrDefault());
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = original;
+        }
+    }
+
+    [Fact]
+    public void GivenAGroupSeparator_WhenParsingToIntOrDefault_ThenTheDefaultIsReturned() =>
+        Assert.Null("1,000".ParseToIntOrDefault());
+
+    [Fact]
+    public void GivenCamelCaseJson_WhenParsingToObjectOrDefault_ThenPropertiesBindRegardlessOfCase()
+    {
+        const string json = "{\"name\":\"Ana\",\"age\":25,\"home\":{\"street\":\"Main\",\"number\":7}}";
+
+        var parsed = json.ParseToObjectOrDefault<Person>();
+
+        Assert.NotNull(parsed);
+        Assert.Equal("Ana", parsed.Name);
+        Assert.Equal(25, parsed.Age);
+        Assert.Equal("Main", parsed.Home.Street);
+        Assert.Equal(7, parsed.Home.Number);
     }
 }

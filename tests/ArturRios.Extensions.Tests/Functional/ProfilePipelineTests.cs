@@ -9,6 +9,7 @@ namespace ArturRios.Extensions.Tests.Functional;
 /// tests cover each extension on its own.
 /// </summary>
 [Trait("Category", "Functional")]
+[Collection(ConsoleCollection.Name)]
 public sealed class ProfilePipelineTests : IDisposable
 {
     private readonly string _directory =

@@ -36,4 +36,47 @@ public class ObjectExtensionsTests
         Assert.Equal(40, dict["Age"]);
         Assert.Null(dict["Home"]);
     }
+
+    [Fact]
+    public void GivenObjectWithAnIndexer_WhenCallingPropertiesToDictionary_ThenTheIndexerIsSkipped()
+    {
+        var dict = new WithIndexer().PropertiesToDictionary();
+
+        Assert.Equal(["Name"], dict.Keys);
+    }
+
+    [Fact]
+    public void GivenObjectWithAnIndexer_WhenCallingNonNullPropertiesToDictionary_ThenTheIndexerIsSkipped()
+    {
+        var dict = new WithIndexer().NonNullPropertiesToDictionary();
+
+        Assert.Equal(["Name"], dict.Keys);
+    }
+
+    [Fact]
+    public void GivenObjectWithStaticAndWriteOnlyProperties_WhenCallingPropertiesToDictionary_ThenOnlyInstanceStateIsMapped()
+    {
+        var dict = new WithStaticAndWriteOnly().PropertiesToDictionary();
+
+        Assert.Equal(["Name"], dict.Keys);
+    }
+
+    private sealed class WithIndexer
+    {
+        public string Name { get; set; } = "indexed";
+
+        public int this[int index] => index;
+    }
+
+    private sealed class WithStaticAndWriteOnly
+    {
+        public static int Instances { get; set; } = 3;
+
+        public string Name { get; set; } = "plain";
+
+        public string Secret
+        {
+            set => _ = value;
+        }
+    }
 }
