@@ -1,16 +1,8 @@
 # Dotnet Extensions
 
-> [!NOTE]
-> This is the real, open-source code of dotnet-extensions. Its home is Forgejo, at
-> https://git.techcraftsmen.net/artur-rios/dotnet-extensions; the copy on GitHub is a read-only mirror, for viewing only, and
-> its issues and pull requests are not followed. If you want to contribute, email me at
-> arturdev@duck.com.
-
 [![Docs](https://img.shields.io/badge/docs-website-blue)](https://docs.artur-rios.tech/dotnet-extensions)
 [![License: Attribution](https://img.shields.io/badge/License-Attribution-blue.svg)](https://github.com/artur-rios/dotnet-extensions/blob/main/LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/ArturRios.Extensions.svg)](https://www.nuget.org/packages/ArturRios.Extensions)
-
-This repository lives at <https://git.techcraftsmen.net/artur-rios/dotnet-extensions>. The GitHub repository is a read-only mirror of it.
 
 A small, focused set of C# extension methods that make every day .NET work more pleasant. Covers strings, enums,
 collections, objects, dates, numbers, comparisons, and exceptions. Lightweight and fully unit-tested.
@@ -186,8 +178,11 @@ Notable changes in each release are recorded in [CHANGELOG.md](https://github.co
 
 ## Contributing
 
-Issues and PRs are welcome. Building from source, running the tests, the branching model and the release process are
+Building from source, running the tests, the branching model and the release process are
 described in [CONTRIBUTING.md](https://github.com/artur-rios/dotnet-extensions/blob/main/CONTRIBUTING.md).
+
+The GitHub repository is a read-only mirror for the real, open-source code of dotnet-extensions. Its home is Forgejo, at
+https://git.techcraftsmen.net/artur-rios/dotnet-extensions. If you want to contribute, e-mail me at arturdev@duck.com.
 
 ## Legal Details
 
