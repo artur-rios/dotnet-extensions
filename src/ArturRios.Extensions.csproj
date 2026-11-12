@@ -20,7 +20,7 @@
     <Version>1.4.1</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ArturRios.Util" Version="2.1.0" />
+    <PackageReference Include="ArturRios.Util" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
   <ItemGroup>
