@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace ArturRios.Extensions.Tests.Mock;
 

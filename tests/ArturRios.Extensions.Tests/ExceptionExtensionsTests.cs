@@ -1,14 +1,19 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
+using ArturRios.Extensions.Tests.Mock;
 
 namespace ArturRios.Extensions.Tests;
 
 [Trait("Category", "Unit")]
-public class ExceptionsExtensionsTests
+public class ExceptionExtensionsTests
 {
     [Fact]
     public void GivenException_WhenCallingToLogLine_ThenReturnsLogLineWithExpectedFormatAndTraceId()
     {
         var ex = new InvalidOperationException("Invalid operation occurred");
+
+        // The timestamp is formatted in the current culture: pinned, so the pattern holds on any machine.
+        using var culture = new CultureScope(CultureInfo.InvariantCulture);
 
         var logLine = ex.ToLogLine(out var traceId);
 
@@ -43,7 +48,7 @@ public class ExceptionsExtensionsTests
         Assert.Contains($"Exception: {ex.GetType().Name}", logLine);
         Assert.Contains($"Message: {ex.Message}", logLine);
         Assert.Contains("StackTrace:", logLine);
-        Assert.True(logLine.Contains("ExceptionsExtensionsTests.ThrowNested"),
+        Assert.True(logLine.Contains("ExceptionExtensionsTests.ThrowNested"),
             "Log line should include method name from stack trace");
     }
 
@@ -92,7 +97,7 @@ public class ExceptionsExtensionsTests
 
         Assert.DoesNotContain('\n', logLine);
         Assert.DoesNotContain('\r', logLine);
-        Assert.Contains("ExceptionsExtensionsTests.ThrowNested", logLine);
+        Assert.Contains("ExceptionExtensionsTests.ThrowNested", logLine);
     }
 
     [Theory]
@@ -106,5 +111,58 @@ public class ExceptionsExtensionsTests
 
         Assert.Contains("Message: first\\nsecond | StackTrace:", logLine);
         Assert.Single(logLine.Split(['\n', '\r', '\u2028', '\u2029']));
+    }
+
+    [Fact]
+    public void GivenAnExceptionThatWasNeverThrown_WhenCallingToLogLine_ThenTheStackTraceSaysSo()
+    {
+        var logLine = new InvalidOperationException("never thrown").ToLogLine(out _);
+
+        Assert.EndsWith(" | StackTrace: No stack trace available", logLine);
+    }
+
+    [Fact]
+    public void GivenTheSameException_WhenCallingToLogLineTwice_ThenEachEntryGetsItsOwnTraceId()
+    {
+        var exception = new InvalidOperationException("twice");
+
+        var first = exception.ToLogLine(out var firstTraceId);
+        var second = exception.ToLogLine(out var secondTraceId);
+
+        Assert.NotEqual(firstTraceId, secondTraceId);
+        Assert.Contains($"TraceId: {firstTraceId} ", first);
+        Assert.Contains($"TraceId: {secondTraceId} ", second);
+    }
+
+    [Fact]
+    public void GivenAnException_WhenCallingToLogLine_ThenTheTimestampIsTheCurrentUtcTimeToTheSecond()
+    {
+        using var culture = new CultureScope(CultureInfo.InvariantCulture);
+
+        var before = DateTime.UtcNow.AddSeconds(-1);
+
+        var logLine = new InvalidOperationException("now").ToLogLine(out _);
+
+        var after = DateTime.UtcNow.AddSeconds(1);
+        var timestamp = DateTime.ParseExact(logLine[..19], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+            DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+
+        Assert.InRange(timestamp, before, after);
+    }
+
+    [Fact]
+    public void GivenAMessageWithAParagraphSeparator_WhenCallingToLogLine_ThenTheBreakIsEscaped()
+    {
+        var logLine = new InvalidOperationException("first\u2029second").ToLogLine(out _);
+
+        Assert.Contains("Message: first\\nsecond | StackTrace:", logLine);
+    }
+
+    [Fact]
+    public void GivenAMessageWithSeveralBreaks_WhenCallingToLogLine_ThenEachBreakBecomesOneEscape()
+    {
+        var logLine = new InvalidOperationException("a\r\n\r\nb\n\rc").ToLogLine(out _);
+
+        Assert.Contains("Message: a\\n\\nb\\n\\nc | StackTrace:", logLine);
     }
 }
