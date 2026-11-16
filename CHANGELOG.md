@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- `ToLogLine` writes its timestamp as `yyyy-MM-dd HH:mm:ss` with the invariant culture. It used the current culture,
+  so a line started `2026-11-16 05.04.14` under fi-FI and `2569-11-16 05:04:14` (the Buddhist year) under th-TH,
+  which broke parsers that read the documented format.
+
 ## [1.4.2] - 2026-11-14
 
 ### Changed
