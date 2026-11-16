@@ -12,7 +12,7 @@ public class ExceptionExtensionsTests
     {
         var ex = new InvalidOperationException("Invalid operation occurred");
 
-        // The timestamp is formatted in the current culture: pinned, so the pattern holds on any machine.
+        // The timestamp is invariant (see the culture test below); the scope keeps the rest of the line stable.
         using var culture = new CultureScope(CultureInfo.InvariantCulture);
 
         var logLine = ex.ToLogLine(out var traceId);
@@ -147,6 +147,27 @@ public class ExceptionExtensionsTests
         var timestamp = DateTime.ParseExact(logLine[..19], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
             DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
 
+        Assert.InRange(timestamp, before, after);
+    }
+
+    [Theory]
+    [InlineData("fi-FI")]
+    [InlineData("th-TH")]
+    [InlineData("pt-BR")]
+    public void GivenACultureWithItsOwnTimeSeparatorOrCalendar_WhenCallingToLogLine_ThenTheTimestampIsInvariant(
+        string cultureName)
+    {
+        using var culture = new CultureScope(CultureInfo.GetCultureInfo(cultureName));
+
+        var before = DateTime.UtcNow.AddSeconds(-1);
+
+        var logLine = new InvalidOperationException("culture").ToLogLine(out _);
+
+        var after = DateTime.UtcNow.AddSeconds(1);
+
+        Assert.Matches(@"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \| ", logLine);
+        var timestamp = DateTime.ParseExact(logLine[..19], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+            DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
         Assert.InRange(timestamp, before, after);
     }
 
