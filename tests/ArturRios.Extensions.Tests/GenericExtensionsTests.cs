@@ -82,4 +82,42 @@ public class GenericExtensionsTests
     {
         Assert.Equal("text", "text".Clone<string>());
     }
+
+    private sealed class Cart
+    {
+        public List<string> Tags { get; set; } = ["default"];
+
+        public Dictionary<string, int> Quantities { get; set; } = new() { ["starter"] = 1 };
+
+        public List<string> Notes { get; set; } = [];
+    }
+
+    [Fact]
+    public void GivenACollectionTheConstructorFills_WhenCloning_ThenTheCloneHasTheSameItemsOnce()
+    {
+        var original = new Cart();
+        original.Tags.Add("x");
+        original.Quantities["extra"] = 2;
+        original.Notes.Add("leave at the door");
+
+        var clone = original.Clone();
+
+        Assert.NotNull(clone);
+        Assert.Equal(["default", "x"], clone.Tags);
+        Assert.Equal(original.Quantities, clone.Quantities);
+        Assert.Equal(["leave at the door"], clone.Notes);
+        Assert.NotSame(original.Tags, clone.Tags);
+    }
+
+    [Fact]
+    public void GivenACollectionTheCallerEmptied_WhenCloning_ThenTheCloneIsEmptyToo()
+    {
+        var original = new Cart();
+        original.Tags.Clear();
+
+        var clone = original.Clone();
+
+        Assert.NotNull(clone);
+        Assert.Empty(clone.Tags);
+    }
 }

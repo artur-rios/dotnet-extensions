@@ -7,11 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- `ArturRios.Util` updated from 2.2.0 to 2.2.1.
+
 ### Fixed
 
 - `ToLogLine` writes its timestamp as `yyyy-MM-dd HH:mm:ss` with the invariant culture. It used the current culture,
   so a line started `2026-11-16 05.04.14` under fi-FI and `2569-11-16 05:04:14` (the Buddhist year) under th-TH,
   which broke parsers that read the documented format.
+- `Clone<T>()` copies a collection the constructor fills once. Json.NET added the items it read to the collection the
+  constructor had already created, so a `List<string> Tags { get; set; } = ["default"]` holding `["default", "x"]`
+  came back as `["default", "default", "x"]`, and one the caller had emptied came back as `["default"]`. A settable
+  member is now replaced with the value read back. A collection with no setter can still only be added to, and the
+  remarks say so.
 
 ## [1.4.2] - 2026-11-14
 
