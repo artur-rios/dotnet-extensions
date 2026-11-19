@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.4.4] - 2026-11-19
+
+### Changed
+
+- `ArturRios.Util` updated from 2.2.1 to 2.3.1.
+
 ## [1.4.3] - 2026-11-19
 
 ### Changed
@@ -109,7 +115,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Extension methods for strings, enumerables, enums, objects, generics, dates, comparisons and exceptions.
 
-[Unreleased]: https://github.com/artur-rios/dotnet-extensions/compare/1.4.3...HEAD
+[Unreleased]: https://github.com/artur-rios/dotnet-extensions/compare/1.4.4...HEAD
+[1.4.4]: https://github.com/artur-rios/dotnet-extensions/compare/1.4.3...1.4.4
 [1.4.3]: https://github.com/artur-rios/dotnet-extensions/compare/1.4.2...1.4.3
 [1.4.2]: https://github.com/artur-rios/dotnet-extensions/compare/1.4.1...1.4.2
 [1.4.1]: https://github.com/artur-rios/dotnet-extensions/compare/1.4.0...1.4.1
