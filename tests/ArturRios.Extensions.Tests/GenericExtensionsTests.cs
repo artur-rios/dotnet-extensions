@@ -47,4 +47,77 @@ public class GenericExtensionsTests
         Assert.Equal("Main", original.Home.Street);
         Assert.Equal(100, original.Home.Number);
     }
+
+    [Fact]
+    public void GivenAGraphWithAReferenceCycle_WhenCloning_ThenTheFailureIsReported()
+    {
+        var first = new Node();
+        var second = new Node { Other = first };
+
+        first.Other = second;
+
+        Assert.Throws<Newtonsoft.Json.JsonSerializationException>(() => first.Clone());
+    }
+
+    private sealed class Node
+    {
+        public Node? Other { get; set; }
+    }
+
+    [Fact]
+    public void GivenACollection_WhenCloning_ThenTheCopyIsANewCollectionOfNewItems()
+    {
+        List<Person> original = [new() { Name = "Ada" }, new() { Name = "Grace" }];
+
+        var clone = original.Clone();
+
+        Assert.NotNull(clone);
+        Assert.NotSame(original, clone);
+        Assert.Equal(["Ada", "Grace"], clone.Select(person => person.Name));
+        Assert.All(clone.Zip(original), pair => Assert.NotSame(pair.Second, pair.First));
+    }
+
+    [Fact]
+    public void GivenAString_WhenCloning_ThenAnEqualStringComesBack()
+    {
+        Assert.Equal("text", "text".Clone<string>());
+    }
+
+    private sealed class Cart
+    {
+        public List<string> Tags { get; set; } = ["default"];
+
+        public Dictionary<string, int> Quantities { get; set; } = new() { ["starter"] = 1 };
+
+        public List<string> Notes { get; set; } = [];
+    }
+
+    [Fact]
+    public void GivenACollectionTheConstructorFills_WhenCloning_ThenTheCloneHasTheSameItemsOnce()
+    {
+        var original = new Cart();
+        original.Tags.Add("x");
+        original.Quantities["extra"] = 2;
+        original.Notes.Add("leave at the door");
+
+        var clone = original.Clone();
+
+        Assert.NotNull(clone);
+        Assert.Equal(["default", "x"], clone.Tags);
+        Assert.Equal(original.Quantities, clone.Quantities);
+        Assert.Equal(["leave at the door"], clone.Notes);
+        Assert.NotSame(original.Tags, clone.Tags);
+    }
+
+    [Fact]
+    public void GivenACollectionTheCallerEmptied_WhenCloning_ThenTheCloneIsEmptyToo()
+    {
+        var original = new Cart();
+        original.Tags.Clear();
+
+        var clone = original.Clone();
+
+        Assert.NotNull(clone);
+        Assert.Empty(clone.Tags);
+    }
 }

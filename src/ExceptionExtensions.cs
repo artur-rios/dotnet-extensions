@@ -1,4 +1,6 @@
-﻿namespace ArturRios.Extensions;
+﻿using System.Globalization;
+
+namespace ArturRios.Extensions;
 
 /// <summary>
 ///     Provides extension methods for Exceptions, including utilities to format an exception into a log line.
@@ -16,6 +18,8 @@ public static class ExceptionExtensions
     ///     so the result really is one line. A stack trace spans one line per frame, and a message can carry
     ///     line breaks taken from untrusted input; written raw, either one split the entry across several
     ///     lines of a line-oriented log, and a crafted message could forge entries that look genuine.
+    ///     The timestamp is UTC, written as <c>yyyy-MM-dd HH:mm:ss</c> with the invariant culture, so it reads
+    ///     the same whatever the current culture's time separator or calendar.
     /// </remarks>
     public static string ToLogLine(this Exception exception, out Guid traceId)
     {
@@ -24,8 +28,10 @@ public static class ExceptionExtensions
         var message = EscapeLineBreaks(exception.Message);
         var stackTrace = EscapeLineBreaks(exception.StackTrace ?? "No stack trace available");
 
+        var timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
         return
-            $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} | TraceId: {traceId} | Exception: {exception.GetType().Name} | Message: {message} | StackTrace: {stackTrace}";
+            $"{timestamp} | TraceId: {traceId} | Exception: {exception.GetType().Name} | Message: {message} | StackTrace: {stackTrace}";
     }
 
     /// <summary>

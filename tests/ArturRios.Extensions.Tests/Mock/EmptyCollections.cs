@@ -4,7 +4,7 @@ public class EmptyCollections : TheoryData<ITestEnumerable?>
 {
     public EmptyCollections()
     {
-        Add(null);
+        Add(null!);
         Add(TestEnumerable.Empty);
         Add(new TestEnumerable());
     }

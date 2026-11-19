@@ -20,7 +20,7 @@ public sealed class ProfilePipelineTests : IDisposable
     public void Dispose() => Directory.Delete(_directory, recursive: true);
 
     [Fact]
-    public void GivenAProfileOnDisk_WhenRunTheWholePipeline_ThenEveryStepAgreesOnTheSameData()
+    public void GivenAProfileOnDisk_WhenRunningTheWholePipeline_ThenEveryStepAgreesOnTheSameData()
     {
         var path = WriteProfile("""
             {

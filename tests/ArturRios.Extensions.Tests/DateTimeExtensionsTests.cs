@@ -40,4 +40,28 @@ public class DateTimeExtensionsTests
         Assert.Equal(59, result.Second);
         Assert.Equal(0, result.Millisecond);
     }
+
+    [Fact]
+    public void GivenADateTimeWithSubSecondTicks_WhenRemovingMilliseconds_ThenEveryTickBelowASecondIsDropped()
+    {
+        var original = new DateTime(2026, 8, 24, 13, 45, 30, DateTimeKind.Utc).AddTicks(9_876_543);
+
+        var truncated = original.RemoveMilliseconds();
+
+        Assert.Equal(new DateTime(2026, 8, 24, 13, 45, 30, DateTimeKind.Utc), truncated);
+        Assert.Equal(0, truncated.Millisecond);
+        Assert.Equal(0, truncated.Ticks % TimeSpan.TicksPerSecond);
+        Assert.Equal(DateTimeKind.Utc, truncated.Kind);
+    }
+
+    [Theory]
+    [InlineData(DateTimeKind.Utc)]
+    [InlineData(DateTimeKind.Local)]
+    [InlineData(DateTimeKind.Unspecified)]
+    public void GivenAnyKind_WhenRemovingMilliseconds_ThenTheKindIsPreserved(DateTimeKind kind)
+    {
+        var original = new DateTime(2026, 8, 24, 13, 45, 30, 999, kind);
+
+        Assert.Equal(kind, original.RemoveMilliseconds().Kind);
+    }
 }
